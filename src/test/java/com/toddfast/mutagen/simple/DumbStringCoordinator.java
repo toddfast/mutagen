@@ -15,9 +15,8 @@ public class DumbStringCoordinator implements Coordinator<String> {
 	 *
 	 *
 	 */
-	public DumbStringCoordinator(Subject<String> subject) {
+	public DumbStringCoordinator() {
 		super();
-		this.subject=subject;
 	}
 
 
@@ -26,7 +25,7 @@ public class DumbStringCoordinator implements Coordinator<String> {
 	 *
 	 */
 	@Override
-	public boolean accept(State<String> state) {
+	public boolean accept(Subject<String> subject, State<String> state) {
 
 		boolean result=state.compareTo(subject.getCurrentState()) > 0;
 
@@ -39,7 +38,4 @@ public class DumbStringCoordinator implements Coordinator<String> {
 
 		return result;
 	}
-
-
-	private Subject<String> subject;
 }

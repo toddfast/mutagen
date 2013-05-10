@@ -1,4 +1,4 @@
-package com.toddfast.mutagen.simple;
+package com.toddfast.mutagen.basic;
 
 import com.toddfast.mutagen.Coordinator;
 import com.toddfast.mutagen.Mutation;
@@ -17,17 +17,19 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * Generates basic plans using the initial list of mutations and the specified
+ * subject and coordinator. The list of mutations is cloned and cannot be
+ * modified after creation.
  * 
  * @author Todd Fast
  */
-public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
+public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 
 	/**
 	 *
 	 *
 	 */
-	public SimplePlanner(Collection<Mutation<I>> allMutations) {
+	public BasicPlanner(Collection<Mutation<I>> allMutations) {
 		this(allMutations,null);
 	}
 
@@ -36,11 +38,9 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 	 *
 	 *
 	 */
-	public SimplePlanner(Collection<Mutation<I>> allMutations,
+	public BasicPlanner(Collection<Mutation<I>> allMutations,
 			Comparator<Mutation<I>> comparator) {
-
 		super();
-
 		this.mutations=new ArrayList<Mutation<I>>(allMutations);
 		if (comparator!=null) {
 			Collections.sort(this.mutations,comparator);
@@ -63,12 +63,12 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 				i.hasNext(); ) {
 
 			Mutation<I> mutation=i.next();
-			if (!coordinator.accept(mutation.getResultingState())) {
+			if (!coordinator.accept(subject,mutation.getResultingState())) {
 				i.remove();
 			}
 		}
 
-		return new SimplePlan(subject,subjectMutations);
+		return new BasicPlan(subject,coordinator,subjectMutations);
 	}
 
 
@@ -76,14 +76,15 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 	 *
 	 *
 	 */
-	private SimpleResult executePlan(SimplePlan plan) {
+	private BasicResult executePlan(BasicPlan plan) {
 
 		List<Mutation<I>> completedMutations=new ArrayList<Mutation<I>>();
 		List<Mutation<I>> remainingMutations=
-			new ArrayList<Mutation<I>>(plan.mutations);
+			new ArrayList<Mutation<I>>(plan.getMutations());
 		MutationException exception=null;
 
-		Context context=new SimpleContext(plan.getSubject());
+		Context context=new BasicContext(
+			plan.getSubject(),plan.getCoordinator());
 
 		Mutation<I> mutation;
 		State<I> lastState=null;
@@ -93,7 +94,9 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 			mutation=i.next();
 
 			try {
-				lastState=mutation.mutate(context);
+				mutation.mutate(context);
+
+				lastState=mutation.getResultingState();
 
 				// Add to the completed list, remove from remaining list
 				completedMutations.add(mutation);
@@ -107,7 +110,7 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 			}
 		}
 
-		return new SimpleResult(plan,plan.getSubject(),
+		return new BasicResult(plan,plan.getSubject(),
 			completedMutations,remainingMutations,lastState,exception);
 	}
 
@@ -122,15 +125,17 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 	 *
 	 *
 	 */
-	public class SimplePlan implements com.toddfast.mutagen.Plan<I> {
+	public class BasicPlan implements com.toddfast.mutagen.Plan<I> {
 
 		/**
 		 *
 		 *
 		 */
-		private SimplePlan(Subject<I> subject, List<Mutation<I>> mutations) {
+		private BasicPlan(Subject<I> subject, Coordinator<I> coordinator,
+				List<Mutation<I>> mutations) {
 			super();
 			this.subject=subject;
+			this.coordinator=coordinator;
 			this.mutations=mutations;
 		}
 
@@ -141,6 +146,15 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 		@Override
 		public Subject<I> getSubject() {
 			return subject;
+		}
+
+		/**
+		 *
+		 *
+		 */
+		@Override
+		public Coordinator<I> getCoordinator() {
+			return coordinator;
 		}
 
 		/**
@@ -159,10 +173,11 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 		@Override
 		public Result<I> execute()
 				throws MutationException {
-			return SimplePlanner.this.executePlan(this);
+			return BasicPlanner.this.executePlan(this);
 		}
 
 		private Subject<I> subject;
+		private Coordinator<I> coordinator;
 		private List<Mutation<I>> mutations;
 	}
 
@@ -177,13 +192,13 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 	 *
 	 *
 	 */
-	public class SimpleResult implements com.toddfast.mutagen.Plan.Result<I> {
+	public class BasicResult implements com.toddfast.mutagen.Plan.Result<I> {
 
 		/**
 		 *
 		 *
 		 */
-		private SimpleResult(SimplePlan plan, 
+		private BasicResult(BasicPlan plan,
 				Subject<I> subject,
 				List<Mutation<I>> completedMutations,
 				List<Mutation<I>> remainingMutations,
@@ -257,7 +272,7 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 		}
 
 
-		private SimplePlan plan;
+		private BasicPlan plan;
 		private Subject<I> subject;
 		private List<Mutation<I>> completedMutations;
 		private List<Mutation<I>> remainingMutations;

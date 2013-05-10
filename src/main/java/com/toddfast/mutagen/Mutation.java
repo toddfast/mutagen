@@ -1,7 +1,8 @@
 package com.toddfast.mutagen;
 
 /**
- *
+ * Represents a single change that can be made to a subject, identified
+ * unambiguously by a state.
  * 
  * @author Todd Fast
  */
@@ -18,7 +19,7 @@ public interface Mutation<I extends Comparable<I>> {
 	 *
 	 *
 	 */
-	public State<I> mutate(Context context)
+	public void mutate(Context context)
 		throws MutationException;
 
 
@@ -29,7 +30,7 @@ public interface Mutation<I extends Comparable<I>> {
 	////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 *
+	 * Context provided to an executing mutation
 	 *
 	 */
 	public static interface Context {
@@ -38,7 +39,15 @@ public interface Mutation<I extends Comparable<I>> {
 		 *
 		 *
 		 */
-		public Subject getSubject();
+		public Subject<?> getSubject();
+
+
+		/**
+		 *
+		 *
+		 */
+		public Coordinator<?> getCoordinator();
+
 
 		/**
 		 *

@@ -1,7 +1,7 @@
 package com.toddfast.mutagen;
 
 /**
- *
+ * Encapsulates the state of a resource as a comparable value
  * 
  * @author Todd Fast
  */

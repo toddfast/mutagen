@@ -2,7 +2,7 @@ package com.toddfast.mutagen.simple.test.mutations.java;
 
 import com.toddfast.mutagen.Mutation;
 import com.toddfast.mutagen.State;
-import com.toddfast.mutagen.simple.SimpleState;
+import com.toddfast.mutagen.basic.SimpleState;
 
 /**
  *
@@ -22,13 +22,11 @@ public class Mutation1 implements Mutation<Integer> {
 
 
 	@Override
-	public State mutate(Context context) {
+	public void mutate(Context context) {
 		context.info("Mutating to \""+getResultingState()+"\"");
 
 		Counter counter=(Counter)context.getSubject();
 		counter.increment();
-
-		return getResultingState();
 	}
 
 	private State<Integer> state=new SimpleState<Integer>(1);

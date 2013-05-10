@@ -1,12 +1,13 @@
-package com.toddfast.mutagen.simple;
+package com.toddfast.mutagen.basic;
 
 import com.toddfast.mutagen.State;
 
 /**
- *
+ * A simple {@link State} implementation that encapsulates a specified ID.
+ * 
  * @author Todd Fast
  */
-public class SimpleState<I extends Comparable<I>> implements State<I> {
+public final class SimpleState<I extends Comparable<I>> implements State<I> {
 
 	/**
 	 *

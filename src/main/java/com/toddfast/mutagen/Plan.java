@@ -3,7 +3,7 @@ package com.toddfast.mutagen;
 import java.util.List;
 
 /**
- *
+ * A prepared plan for mutating the target subject through a sequence of states
  * 
  * @author Todd Fast
  */
@@ -14,6 +14,13 @@ public interface Plan<I extends Comparable<I>> {
 	 *
 	 */
 	public Subject<I> getSubject();
+
+
+	/**
+	 *
+	 *
+	 */
+	public Coordinator<I> getCoordinator();
 
 
 	/**
