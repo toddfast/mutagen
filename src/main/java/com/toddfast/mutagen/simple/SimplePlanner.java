@@ -1,5 +1,6 @@
 package com.toddfast.mutagen.simple;
 
+import com.toddfast.mutagen.Coordinator;
 import com.toddfast.mutagen.Mutation;
 import com.toddfast.mutagen.Mutation.Context;
 import com.toddfast.mutagen.MutationException;
@@ -52,7 +53,7 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 	 *
 	 */
 	@Override
-	public Plan<I> getPlan(Subject<I> subject, State<I> desiredEndState) {
+	public Plan<I> getPlan(Subject<I> subject, Coordinator<I> coordinator) {
 
 		List<Mutation<I>> subjectMutations=
 			new ArrayList<Mutation<I>>(mutations);
@@ -62,7 +63,7 @@ public class SimplePlanner<I extends Comparable<I>> implements Planner<I>  {
 				i.hasNext(); ) {
 
 			Mutation<I> mutation=i.next();
-			if (!subject.accept(mutation.getResultingState())) {
+			if (!coordinator.accept(mutation.getResultingState())) {
 				i.remove();
 			}
 		}

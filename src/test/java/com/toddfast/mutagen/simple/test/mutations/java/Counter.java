@@ -20,24 +20,6 @@ public class Counter implements Subject<Integer> {
 		return state;
 	}
 
-
-	@Override
-	public boolean accept(State<Integer> state) {
-
-		boolean result=
-			state.getID() > getCurrentState().getID();
-
-		if (result) {
-			System.out.println("Accepting state "+state);
-		}
-		else {
-			System.out.println("Rejecting state "+state);
-		}
-
-		return result;
-	}
-
-
 	public void increment() {
 		state=new SimpleState<Integer>(state.getID()+1);
 	}

@@ -20,22 +20,6 @@ public class Buffer implements Subject<String> {
 		return state;
 	}
 
-	@Override
-	public boolean accept(State<String> state) {
-
-		boolean result=state.compareTo(getCurrentState()) > 0;
-
-		if (result) {
-			System.out.println("Accepting state "+state);
-		}
-		else {
-			System.out.println("Rejecting state "+state);
-		}
-
-		return result;
-	}
-
-
 	public void append(String value) {
 		state=new SimpleState<String>(state.getID()+value);
 	}

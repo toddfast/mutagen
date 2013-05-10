@@ -1,5 +1,6 @@
 package com.toddfast.mutagen.simple;
 
+import com.toddfast.mutagen.Coordinator;
 import com.toddfast.mutagen.Mutation;
 import com.toddfast.mutagen.Plan;
 import com.toddfast.mutagen.Plan.Result;
@@ -66,9 +67,11 @@ public class SimplePlannerTest {
 		mutations.add(new Mutation3());
 
 		Planner planner=new SimplePlanner(mutations);
-
 		Counter subject=new Counter(0);
-		Plan plan=planner.getPlan(subject,null);
+		Coordinator<Integer> coordinator=
+			new MonotonicVersionCoordinator(subject);
+
+		Plan plan=planner.getPlan(subject,coordinator);
 
 		Result result=plan.execute();
 
@@ -90,9 +93,11 @@ public class SimplePlannerTest {
 		mutations.add(new Mutation3());
 
 		Planner planner=new SimplePlanner(mutations);
-
 		Counter subject=new Counter(1);
-		Plan plan=planner.getPlan(subject,null);
+		Coordinator<Integer> coordinator=
+			new MonotonicVersionCoordinator(subject);
+
+		Plan plan=planner.getPlan(subject,coordinator);
 
 		Result result=plan.execute();
 
@@ -114,9 +119,11 @@ public class SimplePlannerTest {
 		mutations.add(new Mutation3());
 
 		Planner planner=new SimplePlanner(mutations);
-
 		Counter subject=new Counter(2);
-		Plan plan=planner.getPlan(subject,null);
+		Coordinator<Integer> coordinator=
+			new MonotonicVersionCoordinator(subject);
+
+		Plan plan=planner.getPlan(subject,coordinator);
 
 		Result result=plan.execute();
 
@@ -138,9 +145,11 @@ public class SimplePlannerTest {
 		mutations.add(new Mutation3());
 
 		Planner planner=new SimplePlanner(mutations);
-
 		Counter subject=new Counter(3);
-		Plan plan=planner.getPlan(subject,null);
+		Coordinator<Integer> coordinator=
+			new MonotonicVersionCoordinator(subject);
+
+		Plan plan=planner.getPlan(subject,coordinator);
 
 		Result result=plan.execute();
 
@@ -162,9 +171,11 @@ public class SimplePlannerTest {
 		mutations.add(new Mutation3());
 
 		Planner planner=new SimplePlanner(mutations);
-
 		Counter subject=new Counter(4);
-		Plan plan=planner.getPlan(subject,null);
+		Coordinator<Integer> coordinator=
+			new MonotonicVersionCoordinator(subject);
+
+		Plan plan=planner.getPlan(subject,coordinator);
 
 		Result result=plan.execute();
 
@@ -186,9 +197,9 @@ public class SimplePlannerTest {
 		mutations.add(new MutationC());
 
 		Planner<String> planner=new SimplePlanner<String>(mutations);
-
 		Buffer subject=new Buffer("");
-		Plan<String> plan=planner.getPlan(subject,null);
+		Coordinator<String> coordinator=new DumbStringCoordinator(subject);
+		Plan<String> plan=planner.getPlan(subject,coordinator);
 
 		Result<String> result=plan.execute();
 
@@ -212,7 +223,8 @@ public class SimplePlannerTest {
 		Planner<String> planner=new SimplePlanner<String>(mutations);
 
 		Buffer subject=new Buffer("a");
-		Plan<String> plan=planner.getPlan(subject,null);
+		Coordinator<String> coordinator=new DumbStringCoordinator(subject);
+		Plan<String> plan=planner.getPlan(subject,coordinator);
 
 		Result<String> result=plan.execute();
 
