@@ -3,7 +3,7 @@ package com.toddfast.mutagen.basic;
 import com.toddfast.mutagen.Coordinator;
 import com.toddfast.mutagen.Mutation;
 import com.toddfast.mutagen.Mutation.Context;
-import com.toddfast.mutagen.MutationException;
+import com.toddfast.mutagen.MutagenException;
 import com.toddfast.mutagen.Plan;
 import com.toddfast.mutagen.Plan.Result;
 import com.toddfast.mutagen.Planner;
@@ -81,7 +81,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		List<Mutation<I>> completedMutations=new ArrayList<Mutation<I>>();
 		List<Mutation<I>> remainingMutations=
 			new ArrayList<Mutation<I>>(plan.getMutations());
-		MutationException exception=null;
+		MutagenException exception=null;
 
 		Context context=new BasicContext(
 			plan.getSubject(),plan.getCoordinator());
@@ -103,7 +103,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 				i.remove();
 			}
 			catch (RuntimeException e) {
-				exception=new MutationException("Exception executing "+
+				exception=new MutagenException("Exception executing "+
 					"mutation for state \""+mutation.getResultingState()+
 					"\"",e);
 				break;
@@ -172,7 +172,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		 */
 		@Override
 		public Result<I> execute()
-				throws MutationException {
+				throws MutagenException {
 			return BasicPlanner.this.executePlan(this);
 		}
 
@@ -203,7 +203,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 				List<Mutation<I>> completedMutations,
 				List<Mutation<I>> remainingMutations,
 				State<I> lastState,
-				MutationException exception) {
+				MutagenException exception) {
 			super();
 			this.plan=plan;
 			this.subject=subject;
@@ -267,7 +267,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		 *
 		 */
 		@Override
-		public MutationException getException() {
+		public MutagenException getException() {
 			return exception;
 		}
 
@@ -277,7 +277,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		private List<Mutation<I>> completedMutations;
 		private List<Mutation<I>> remainingMutations;
 		private State<I> lastState;
-		private MutationException exception;
+		private MutagenException exception;
 	}
 
 

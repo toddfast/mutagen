@@ -20,7 +20,7 @@ public interface Mutation<I extends Comparable<I>> {
 	 *
 	 */
 	public void mutate(Context context)
-		throws MutationException;
+		throws MutagenException;
 
 
 

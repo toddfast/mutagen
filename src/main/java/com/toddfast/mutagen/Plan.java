@@ -35,7 +35,7 @@ public interface Plan<I extends Comparable<I>> {
 	 *
 	 */
 	public Result<I> execute()
-		throws MutationException;
+		throws MutagenException;
 
 
 
@@ -89,6 +89,6 @@ public interface Plan<I extends Comparable<I>> {
 		 *
 		 *
 		 */
-		public MutationException getException();
+		public MutagenException getException();
 	}
 }
