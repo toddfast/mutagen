@@ -68,7 +68,7 @@ public interface Plan<I extends Comparable<I>> {
 		 *
 		 *
 		 */
-		public <I extends Comparable<I>> I getLastState();
+		public <I extends Comparable<I>> State<I> getLastState();
 
 
 		/**

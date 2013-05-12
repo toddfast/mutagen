@@ -24,6 +24,16 @@ public final class SimpleState<I extends Comparable<I>> implements State<I> {
 	 *
 	 */
 	@Override
+	public String toString() {
+		return id!=null ? id.toString() : "null";
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+	@Override
 	public I getID() {
 		return id;
 	}

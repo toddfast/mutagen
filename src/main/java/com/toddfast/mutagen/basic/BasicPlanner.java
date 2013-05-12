@@ -83,7 +83,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 			new ArrayList<Mutation<I>>(plan.getMutations());
 		MutagenException exception=null;
 
-		Context context=new BasicContext(
+		Context context=createContext(
 			plan.getSubject(),plan.getCoordinator());
 
 		Mutation<I> mutation;
@@ -112,6 +112,16 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 
 		return new BasicResult(plan,plan.getSubject(),
 			completedMutations,remainingMutations,lastState,exception);
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+	protected Context createContext(Subject<I> subject,
+			Coordinator<I> coordinator) {
+		return new BasicContext(subject,coordinator);
 	}
 
 
