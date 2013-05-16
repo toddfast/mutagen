@@ -5,7 +5,7 @@ Mutagen is a lightweight framework for applying versioned changes to a resource,
 
 Mutagen takes the general principals of database versioning from frameworks like Flyway and abstracts them so that they can be applied to virtually any resource, not just SQL-based databases. Thus, Mutagen can be used to version changes to SQL and no-SQL databases, files, cloud resources, machine configurations, workflows, or anything else whose state can be defined by a strictly ordered version history.
 
-The original impetus for creating Mutagen was to manage schema versioning for Apache Cassandra. Please see the separate `mutagen-cassandra` project that implementation.
+The original impetus for creating Mutagen was to manage schema versioning for Apache Cassandra. Please see the separate `mutagen-cassandra` project for that implementation.
 
 Mutagen is written in Java 1.6 with no dependencies.
 
