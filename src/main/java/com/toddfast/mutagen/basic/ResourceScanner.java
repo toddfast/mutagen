@@ -77,17 +77,44 @@ public class ResourceScanner {
 			throws IOException {
 
 		List<String> result = new ArrayList<String>();
-		File file = new File(uri);
 
-		if (file.isDirectory()){
+		System.err.println("Getting resources for URI: "+uri);
+		if (uri.getScheme().equals("jar")) {
+			// The URI looks like this:
+			// jar:file:<path>/<file>.jar!/<qualified package path>
+			String uriString=uri.toString();
+
+			final String PREFIX="file:";
+			int startIndex=uriString.indexOf(PREFIX);
+			int endIndex=uriString.indexOf("!");
+
+			assert startIndex!=-1 && endIndex!=-1:
+				"JAR URI doesn't have expected format: "+uri;
+
+			String fileURIString=
+				uriString.substring(startIndex+PREFIX.length(),endIndex);
+			File file = new File(fileURIString);
+
+			// Everything after the "!/" in the URI is the resource path within
+			// the jar. We don't want to return anything that does't also match
+			// that.
+			String resourcePath=uriString.substring(endIndex+2);
 			result.addAll(
-				getResourcesFromDirectory(file,pattern));
+				getResourcesFromJarFile(file,pattern,resourcePath));
 		}
 		else {
-			result.addAll(
-				getResourcesFromJarFile(file,pattern));
-		}
+			// The URI points to a file
+			File file = new File(uri);
 
+			if (file.isDirectory()){
+				result.addAll(
+					getResourcesFromDirectory(file,pattern));
+			}
+			else {
+				result.addAll(
+					getResourcesFromJarFile(file,pattern,null));
+			}
+		}
 		return result;
 	}
 
@@ -96,7 +123,8 @@ public class ResourceScanner {
 	 *
 	 *
 	 */
-	private List<String> getResourcesFromJarFile(File file, Pattern pattern)
+	private List<String> getResourcesFromJarFile(File file, Pattern pattern,
+			String resourcePathPrefix)
 			throws IOException {
 
 		List<String> result = new ArrayList<String>();
@@ -107,9 +135,18 @@ public class ResourceScanner {
 			Enumeration e = zipfile.entries();
 			while (e.hasMoreElements()) {
 				ZipEntry entry = (ZipEntry)e.nextElement();
-				String fileName = entry.getName();
-				if (pattern.matcher(fileName).matches()) {
-					result.add(fileName);
+
+				if (entry.isDirectory()) {
+					continue;
+				}
+
+				String entryName = entry.getName();
+				if (pattern.matcher(entryName).matches()) {
+					if (!entryName.startsWith(resourcePathPrefix)) {
+						continue;
+					}
+
+					result.add(entryName);
 				}
 			}
 
