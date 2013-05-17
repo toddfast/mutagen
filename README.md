@@ -1,7 +1,7 @@
 mutagen
 =======
 
-Mutagen is a lightweight framework for applying versioned changes (known as *mutations*) to a resource, like a database, taking into account its existing state and only applying changes that haven't yet been applied.
+Mutagen is a lightweight framework for applying versioned changes (known as *mutations*) to a resource, like a database. Mutagen takes into account the resource's existing state and only applies changes that haven't yet been applied.
 
 Mutagen takes the general principals of database versioning from frameworks like Flyway and abstracts them so that they can be applied to virtually any resource, not just SQL-based databases. Thus, Mutagen can be used to version changes to SQL and no-SQL databases, files, cloud resources, machine configurations, workflows, or anything else whose state can be defined by a strictly ordered versioning scheme.
 
@@ -16,18 +16,18 @@ Mutagen (this project) is fairly limited by itself, providing mainly an API/SPI 
 
 To make better use of Mutagen, use one of its sub-projects (like [Mutagen Cassandra](https://github.com/toddfast/mutagen-cassandra)), or use it as the basis for writing your own resource-mutation framework. Happy mutating!
 
-Concepts
---------
+Core Entities
+-------------
 
-**mutation**: A mutation is a single change that can be applied to a resource. It is described by a *state*.
+**Mutation**: A mutation is a single change that can be applied to a resource. It is described by a *state*. The actual work performed by a mutation is arbitrary and depends on the higher-level implementation using Mutagen. For example, mutations could be scripts, declarative statements, Java code, network calls, or anything else.
 
-**state**: Every resource, called a *subject*, has a definite current state. States can be ordered relative to one another, allowing Mutagen to determine which states to apply (states > current state) and which to skip (states <= current state). Loosely, you may think of states as version numbers, but as long as they can be ordered, Mutagen doesn't require that states look anything like traditional version numbers.
+**State**: Every resource, called a *subject*, has a definite current state. States can be ordered relative to one another, allowing Mutagen to determine which states to apply (states > current state) and which to skip (states <= current state). Loosely, you may think of states as version numbers, but as long as they can be ordered, Mutagen doesn't require that states look anything like traditional version numbers.
     
-**subject**: The resource to mutate. Typical examples would be a database schema, a file, a configuration, or anything else that can be changed in an orderly way over time.
+**Subject**: The resource to mutate. Mutagen moves subjects through an ordered series of states by applying mutations. Typical examples would be a database schema, a file, a configuration, or anything else that can be changed in an orderly way.
     
-**plan**: A plan is an executable encapsulation of the mutations to be made to a particular subject.
+**Plan**: A plan is an executable encapsulation of the mutations to be made to a particular subject.
     
-**planner**: A planner evaluates the current state of a subject, the available mutations, and creates a plan to mutate the subject to the desired state.
+**Planner**: A planner evaluates the current state of a subject, the available mutations, and creates a plan to mutate the subject to the desired state.
     
-**coordinator**: A coordinator decides when and if a mutation can be applied to a subject. For example, in a clustered environment, a coordinator may apply locking to ensure mutations are applied consistently.
+**Coordinator**: A coordinator decides when and if a mutation can be applied to a subject. For example, in a clustered environment, a coordinator may apply locking to ensure mutations are applied consistently.
 
