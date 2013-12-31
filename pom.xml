@@ -1,24 +1,58 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
-  <groupId>com.toddfast.mutagen</groupId>
-  <artifactId>mutagen</artifactId>
-  <version>0.2</version>
-  <packaging>jar</packaging>
+	<groupId>com.toddfast.mutagen</groupId>
+	<artifactId>mutagen</artifactId>
+	<version>0.2</version>
+	<packaging>jar</packaging>
 
-  <name>toddfast-mutagen</name>
+	<name>toddfast-mutagen</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<description>Mutagen is a lightweight framework for applying versioned 
+		changes (known as mutations) to a resource, like a database. Mutagen 
+		takes into account the resource's existing state and only applies 
+		changes that haven't yet been applied.
+	</description>
 
-  <dependencies>
-	  <dependency>
-		  <groupId>junit</groupId>
-		  <artifactId>junit</artifactId>
-		  <version>4.10</version>
-		  <scope>test</scope>
-	  </dependency>
-  </dependencies>
+	<url>https://github.com/toddfast/mutagen</url>
+	<scm>
+		<url>https://github.com/toddfast/mutagen</url>
+		<connection>scm:git:git@github.com:toddfast/mutagen.git</connection>
+		<developerConnection>scm:git:git@github.com:toddfast/mutagen.git</developerConnection>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>toddfast</id>
+			<name>Todd Fast</name>
+			<email>todd@toddfast.com</email>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
