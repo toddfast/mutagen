@@ -3,7 +3,7 @@ package com.toddfast.mutagen;
 /**
  * Represents a single change that can be made to a subject, identified
  * unambiguously by a state.
- * 
+ *
  * @author Todd Fast
  */
 public interface Mutation<I extends Comparable<I>> {
@@ -33,20 +33,20 @@ public interface Mutation<I extends Comparable<I>> {
 	 * Context provided to an executing mutation
 	 *
 	 */
-	public static interface Context {
+	public static interface Context<I extends Comparable<I>> {
 
 		/**
 		 *
 		 *
 		 */
-		public Subject<?> getSubject();
+		public Subject<I> getSubject();
 
 
 		/**
 		 *
 		 *
 		 */
-		public Coordinator<?> getCoordinator();
+		public Coordinator<I> getCoordinator();
 
 
 		/**

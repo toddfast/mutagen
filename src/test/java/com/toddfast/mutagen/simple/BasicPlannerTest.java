@@ -1,12 +1,23 @@
 package com.toddfast.mutagen.simple;
 
-import com.toddfast.mutagen.basic.BasicPlanner;
-import com.toddfast.mutagen.basic.MonotonicVersionCoordinator;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import com.toddfast.mutagen.Coordinator;
 import com.toddfast.mutagen.Mutation;
+import com.toddfast.mutagen.Mutation.Context;
 import com.toddfast.mutagen.Plan;
 import com.toddfast.mutagen.Plan.Result;
 import com.toddfast.mutagen.Planner;
+import com.toddfast.mutagen.basic.BasicContext;
+import com.toddfast.mutagen.basic.BasicPlanner;
+import com.toddfast.mutagen.basic.MonotonicVersionCoordinator;
 import com.toddfast.mutagen.simple.test.mutations.java.Buffer;
 import com.toddfast.mutagen.simple.test.mutations.java.Counter;
 import com.toddfast.mutagen.simple.test.mutations.java.Mutation1;
@@ -15,14 +26,8 @@ import com.toddfast.mutagen.simple.test.mutations.java.Mutation3;
 import com.toddfast.mutagen.simple.test.mutations.java.MutationA;
 import com.toddfast.mutagen.simple.test.mutations.java.MutationB;
 import com.toddfast.mutagen.simple.test.mutations.java.MutationC;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -34,52 +39,47 @@ public class BasicPlannerTest {
 	public BasicPlannerTest() {
 	}
 
-
 	@BeforeClass
 	public static void setUpClass() {
 	}
-
 
 	@AfterClass
 	public static void tearDownClass() {
 	}
 
-
 	@Before
 	public void setUp() {
 	}
-
 
 	@After
 	public void tearDown() {
 	}
 
-
 	/**
 	 *
-	 * 
+	 *
 	 */
 	@Test
 	public void testGetPlan() {
 
-		List<Mutation<Integer>> mutations=new ArrayList<Mutation<Integer>>();
+		List<Mutation<Integer>> mutations = new ArrayList<Mutation<Integer>>();
 
-		mutations.add(new Mutation1());
-		mutations.add(new Mutation2());
-		mutations.add(new Mutation3());
+		mutations.add( new Mutation1() );
+		mutations.add( new Mutation2() );
+		mutations.add( new Mutation3() );
 
-		Planner planner=new BasicPlanner(mutations);
-		Counter subject=new Counter(0);
-		Coordinator<Integer> coordinator=
-			new MonotonicVersionCoordinator();
+		Planner planner = new BasicPlanner( mutations );
+		Counter subject = new Counter( 0 );
+		Coordinator<Integer> coordinator = new MonotonicVersionCoordinator();
 
-		Plan plan=planner.getPlan(subject,coordinator);
+		Context<Integer> context = new BasicContext( subject, coordinator );
 
-		Result result=plan.execute();
+		Plan plan = planner.getPlan( context );
 
-		assertEquals((int)subject.getCurrentState().getID(),3);
+		Result result = plan.execute( context );
+
+		assertEquals( (int) subject.getCurrentState().getID(), 3 );
 	}
-
 
 	/**
 	 *
@@ -88,24 +88,23 @@ public class BasicPlannerTest {
 	@Test
 	public void testGetPlan2() {
 
-		List<Mutation<Integer>> mutations=new ArrayList<Mutation<Integer>>();
+		List<Mutation<Integer>> mutations = new ArrayList<Mutation<Integer>>();
 
-		mutations.add(new Mutation1());
-		mutations.add(new Mutation2());
-		mutations.add(new Mutation3());
+		mutations.add( new Mutation1() );
+		mutations.add( new Mutation2() );
+		mutations.add( new Mutation3() );
 
-		Planner planner=new BasicPlanner(mutations);
-		Counter subject=new Counter(1);
-		Coordinator<Integer> coordinator=
-			new MonotonicVersionCoordinator();
+		Planner planner = new BasicPlanner( mutations );
+		Counter subject = new Counter( 1 );
+		Coordinator<Integer> coordinator = new MonotonicVersionCoordinator();
+		Context<Integer> context = new BasicContext( subject, coordinator );
 
-		Plan plan=planner.getPlan(subject,coordinator);
+		Plan plan = planner.getPlan( context );
 
-		Result result=plan.execute();
+		Result result = plan.execute(context);
 
-		assertEquals((int)subject.getCurrentState().getID(),3);
+		assertEquals( (int) subject.getCurrentState().getID(), 3 );
 	}
-
 
 	/**
 	 *
@@ -114,24 +113,23 @@ public class BasicPlannerTest {
 	@Test
 	public void testGetPlan3() {
 
-		List<Mutation<Integer>> mutations=new ArrayList<Mutation<Integer>>();
+		List<Mutation<Integer>> mutations = new ArrayList<Mutation<Integer>>();
 
-		mutations.add(new Mutation1());
-		mutations.add(new Mutation2());
-		mutations.add(new Mutation3());
+		mutations.add( new Mutation1() );
+		mutations.add( new Mutation2() );
+		mutations.add( new Mutation3() );
 
-		Planner planner=new BasicPlanner(mutations);
-		Counter subject=new Counter(2);
-		Coordinator<Integer> coordinator=
-			new MonotonicVersionCoordinator();
+		Planner planner = new BasicPlanner( mutations );
+		Counter subject = new Counter( 2 );
+		Coordinator<Integer> coordinator = new MonotonicVersionCoordinator();
+		Context<Integer> context = new BasicContext( subject, coordinator );
 
-		Plan plan=planner.getPlan(subject,coordinator);
+		Plan plan = planner.getPlan( context );
 
-		Result result=plan.execute();
+		Result result = plan.execute( context );
 
-		assertEquals((int)subject.getCurrentState().getID(),3);
+		assertEquals( (int) subject.getCurrentState().getID(), 3 );
 	}
-
 
 	/**
 	 *
@@ -140,24 +138,23 @@ public class BasicPlannerTest {
 	@Test
 	public void testGetPlan4() {
 
-		List<Mutation<Integer>> mutations=new ArrayList<Mutation<Integer>>();
+		List<Mutation<Integer>> mutations = new ArrayList<Mutation<Integer>>();
 
-		mutations.add(new Mutation1());
-		mutations.add(new Mutation2());
-		mutations.add(new Mutation3());
+		mutations.add( new Mutation1() );
+		mutations.add( new Mutation2() );
+		mutations.add( new Mutation3() );
 
-		Planner planner=new BasicPlanner(mutations);
-		Counter subject=new Counter(3);
-		Coordinator<Integer> coordinator=
-			new MonotonicVersionCoordinator();
+		Planner planner = new BasicPlanner( mutations );
+		Counter subject = new Counter( 3 );
+		Coordinator<Integer> coordinator = new MonotonicVersionCoordinator();
+		Context<Integer> context = new BasicContext( subject, coordinator );
 
-		Plan plan=planner.getPlan(subject,coordinator);
+		Plan plan = planner.getPlan(context);
 
-		Result result=plan.execute();
+		Result result = plan.execute(context);
 
-		assertEquals((int)subject.getCurrentState().getID(),3);
+		assertEquals( (int) subject.getCurrentState().getID(), 3 );
 	}
-
 
 	/**
 	 *
@@ -166,24 +163,23 @@ public class BasicPlannerTest {
 	@Test
 	public void testGetPlan5() {
 
-		List<Mutation<Integer>> mutations=new ArrayList<Mutation<Integer>>();
+		List<Mutation<Integer>> mutations = new ArrayList<Mutation<Integer>>();
 
-		mutations.add(new Mutation1());
-		mutations.add(new Mutation2());
-		mutations.add(new Mutation3());
+		mutations.add( new Mutation1() );
+		mutations.add( new Mutation2() );
+		mutations.add( new Mutation3() );
 
-		Planner planner=new BasicPlanner(mutations);
-		Counter subject=new Counter(4);
-		Coordinator<Integer> coordinator=
-			new MonotonicVersionCoordinator();
+		Planner planner = new BasicPlanner( mutations );
+		Counter subject = new Counter( 4 );
+		Coordinator<Integer> coordinator = new MonotonicVersionCoordinator();
+		Context<Integer> context = new BasicContext( subject, coordinator );
 
-		Plan plan=planner.getPlan(subject,coordinator);
+		Plan plan = planner.getPlan(context);
 
-		Result result=plan.execute();
+		Result result = plan.execute(context);
 
-		assertEquals((int)subject.getCurrentState().getID(),4);
+		assertEquals( (int) subject.getCurrentState().getID(), 4 );
 	}
-
 
 	/**
 	 *
@@ -192,22 +188,22 @@ public class BasicPlannerTest {
 	@Test
 	public void testBuffer1() {
 
-		List<Mutation<String>> mutations=new ArrayList<Mutation<String>>();
+		List<Mutation<String>> mutations = new ArrayList<Mutation<String>>();
 
-		mutations.add(new MutationA());
-		mutations.add(new MutationB());
-		mutations.add(new MutationC());
+		mutations.add( new MutationA() );
+		mutations.add( new MutationB() );
+		mutations.add( new MutationC() );
 
-		Planner<String> planner=new BasicPlanner<String>(mutations);
-		Buffer subject=new Buffer("");
-		Coordinator<String> coordinator=new DumbStringCoordinator();
-		Plan<String> plan=planner.getPlan(subject,coordinator);
+		Planner<String> planner = new BasicPlanner<String>( mutations );
+		Buffer subject = new Buffer( "" );
+		Coordinator<String> coordinator = new DumbStringCoordinator();
+		Context<String> context = new BasicContext( subject, coordinator );
+		Plan<String> plan = planner.getPlan(context);
 
-		Result<String> result=plan.execute();
+		Result<String> result = plan.execute(context);
 
-		assertEquals("abc",subject.getCurrentState().getID());
+		assertEquals( "abc", subject.getCurrentState().getID() );
 	}
-
 
 	/**
 	 *
@@ -216,20 +212,21 @@ public class BasicPlannerTest {
 	@Test
 	public void testBuffer2() {
 
-		List<Mutation<String>> mutations=new ArrayList<Mutation<String>>();
+		List<Mutation<String>> mutations = new ArrayList<Mutation<String>>();
 
-		mutations.add(new MutationA());
-		mutations.add(new MutationB());
-		mutations.add(new MutationC());
+		mutations.add( new MutationA() );
+		mutations.add( new MutationB() );
+		mutations.add( new MutationC() );
 
-		Planner<String> planner=new BasicPlanner<String>(mutations);
+		Planner<String> planner = new BasicPlanner<String>( mutations );
 
-		Buffer subject=new Buffer("a");
-		Coordinator<String> coordinator=new DumbStringCoordinator();
-		Plan<String> plan=planner.getPlan(subject,coordinator);
+		Buffer subject = new Buffer( "a" );
+		Coordinator<String> coordinator = new DumbStringCoordinator();
+		Context<String> context = new BasicContext( subject, coordinator );
+		Plan<String> plan = planner.getPlan(context);
 
-		Result<String> result=plan.execute();
+		Result<String> result = plan.execute(context);
 
-		assertEquals("abc",subject.getCurrentState().getID());
+		assertEquals( "abc", subject.getCurrentState().getID() );
 	}
 }

@@ -7,16 +7,16 @@ import com.toddfast.mutagen.Subject;
 /**
  * Implements the basic contract of {@link Mutation.Context}. Logs to
  * {@link System.out} and {@link System.err}.
- * 
+ *
  * @author Todd Fast
  */
-public class BasicContext implements Mutation.Context {
+public class BasicContext<I extends Comparable<I>> implements Mutation.Context<I> {
 
 	/**
 	 *
 	 *
 	 */
-	public BasicContext(Subject<?> subject, Coordinator<?> coordinator) {
+	public BasicContext(Subject<I> subject, Coordinator<I> coordinator) {
 		super();
 		this.subject=subject;
 		this.coordinator=coordinator;
@@ -28,7 +28,7 @@ public class BasicContext implements Mutation.Context {
 	 *
 	 */
 	@Override
-	public Subject<?> getSubject() {
+	public Subject<I> getSubject() {
 		return subject;
 	}
 
@@ -38,7 +38,7 @@ public class BasicContext implements Mutation.Context {
 	 *
 	 */
 	@Override
-	public Coordinator<?> getCoordinator() {
+	public Coordinator<I> getCoordinator() {
 		return coordinator;
 	}
 
@@ -79,6 +79,6 @@ public class BasicContext implements Mutation.Context {
 	// Fields
 	////////////////////////////////////////////////////////////////////////////
 
-	private Subject<?> subject;
-	private Coordinator<?> coordinator;
+	private Subject<I> subject;
+	private Coordinator<I> coordinator;
 }
