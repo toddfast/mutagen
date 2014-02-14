@@ -1,14 +1,5 @@
 package com.toddfast.mutagen.basic;
 
-import com.toddfast.mutagen.Coordinator;
-import com.toddfast.mutagen.Mutation;
-import com.toddfast.mutagen.Mutation.Context;
-import com.toddfast.mutagen.MutagenException;
-import com.toddfast.mutagen.Plan;
-import com.toddfast.mutagen.Plan.Result;
-import com.toddfast.mutagen.Planner;
-import com.toddfast.mutagen.State;
-import com.toddfast.mutagen.Subject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,23 +7,31 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import com.toddfast.mutagen.Coordinator;
+import com.toddfast.mutagen.MutagenException;
+import com.toddfast.mutagen.Mutation;
+import com.toddfast.mutagen.Mutation.Context;
+import com.toddfast.mutagen.Plan;
+import com.toddfast.mutagen.Planner;
+import com.toddfast.mutagen.State;
+import com.toddfast.mutagen.Subject;
+
 /**
  * Generates basic plans using the initial list of mutations and the specified
  * subject and coordinator. The list of mutations is cloned and cannot be
  * modified after creation.
- * 
+ *
  * @author Todd Fast
  */
-public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
+public class BasicPlanner<I extends Comparable<I>> implements Planner<I> {
 
 	/**
 	 *
 	 *
 	 */
 	public BasicPlanner(Collection<Mutation<I>> allMutations) {
-		this(allMutations,null);
+		this( allMutations, null );
 	}
-
 
 	/**
 	 *
@@ -41,95 +40,73 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 	public BasicPlanner(Collection<Mutation<I>> allMutations,
 			Comparator<Mutation<I>> comparator) {
 		super();
-		this.mutations=new ArrayList<Mutation<I>>(allMutations);
-		if (comparator!=null) {
-			Collections.sort(this.mutations,comparator);
+		this.mutations = new ArrayList<Mutation<I>>( allMutations );
+		if ( comparator != null ) {
+			Collections.sort( this.mutations, comparator );
 		}
 	}
-
 
 	/**
 	 *
 	 *
 	 */
 	@Override
-	public Plan<I> getPlan(Subject<I> subject, Coordinator<I> coordinator) {
+	public Plan<I> getPlan(Context<I> context) {
+		Coordinator<I> coordinator = context.getCoordinator();
+		Subject<I> subject = context.getSubject();
 
-		List<Mutation<I>> subjectMutations=
-			new ArrayList<Mutation<I>>(mutations);
+		List<Mutation<I>> subjectMutations = new ArrayList<Mutation<I>>( mutations );
 
 		// Filter out the mutations that are unacceptable to the subject
-		for (Iterator<Mutation<I>> i=subjectMutations.iterator();
-				i.hasNext(); ) {
+		for ( Iterator<Mutation<I>> i = subjectMutations.iterator(); i.hasNext(); ) {
 
-			Mutation<I> mutation=i.next();
-			if (!coordinator.accept(subject,mutation.getResultingState())) {
+			Mutation<I> mutation = i.next();
+			if ( !coordinator.accept( subject, mutation.getResultingState() ) ) {
 				i.remove();
 			}
 		}
 
-		return new BasicPlan(subject,coordinator,subjectMutations);
+		return new BasicPlan( subject, coordinator, subjectMutations );
 	}
-
 
 	/**
 	 *
 	 *
 	 */
-	private BasicResult executePlan(BasicPlan plan) {
+	private BasicResult executePlan(Context<I> context, BasicPlan plan) {
 
-		List<Mutation<I>> completedMutations=new ArrayList<Mutation<I>>();
-		List<Mutation<I>> remainingMutations=
-			new ArrayList<Mutation<I>>(plan.getMutations());
-		MutagenException exception=null;
-
-		Context context=createContext(
-			plan.getSubject(),plan.getCoordinator());
+		List<Mutation<I>> completedMutations = new ArrayList<Mutation<I>>();
+		List<Mutation<I>> remainingMutations = new ArrayList<Mutation<I>>( plan.getMutations() );
+		MutagenException exception = null;
 
 		Mutation<I> mutation;
-		State<I> lastState=null;
-		for (Iterator<Mutation<I>>
-				i=remainingMutations.iterator(); i.hasNext(); ) {
-
-			mutation=i.next();
+		State<I> lastState = null;
+		for ( Iterator<Mutation<I>> i = remainingMutations.iterator(); i.hasNext(); ) {
+			mutation = i.next();
 
 			try {
-				mutation.mutate(context);
+				mutation.mutate( context );
 
-				lastState=mutation.getResultingState();
+				lastState = mutation.getResultingState();
 
 				// Add to the completed list, remove from remaining list
-				completedMutations.add(mutation);
+				completedMutations.add( mutation );
 				i.remove();
-			}
-			catch (RuntimeException e) {
-				exception=new MutagenException("Exception executing "+
-					"mutation for state \""+mutation.getResultingState()+
-					"\"",e);
+			} catch ( RuntimeException e ) {
+				exception = new MutagenException( "Exception executing "
+						+ "mutation for state \""
+						+ mutation.getResultingState() + "\"", e );
 				break;
 			}
 		}
 
-		return new BasicResult(plan,plan.getSubject(),
-			completedMutations,remainingMutations,lastState,exception);
+		return new BasicResult( plan, plan.getSubject(), completedMutations,
+				remainingMutations, lastState, exception );
 	}
 
-
-	/**
-	 *
-	 *
-	 */
-	protected Context createContext(Subject<I> subject,
-			Coordinator<I> coordinator) {
-		return new BasicContext(subject,coordinator);
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	// Types
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 
 	/**
 	 *
@@ -144,9 +121,9 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		private BasicPlan(Subject<I> subject, Coordinator<I> coordinator,
 				List<Mutation<I>> mutations) {
 			super();
-			this.subject=subject;
-			this.coordinator=coordinator;
-			this.mutations=mutations;
+			this.subject = subject;
+			this.coordinator = coordinator;
+			this.mutations = mutations;
 		}
 
 		/**
@@ -173,7 +150,7 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		 */
 		@Override
 		public List<Mutation<I>> getMutations() {
-			return Collections.unmodifiableList(mutations);
+			return Collections.unmodifiableList( mutations );
 		}
 
 		/**
@@ -181,22 +158,18 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		 *
 		 */
 		@Override
-		public Result<I> execute()
-				throws MutagenException {
-			return BasicPlanner.this.executePlan(this);
+		public Result<I> execute(Context<I> context) throws MutagenException {
+			return BasicPlanner.this.executePlan( context, this );
 		}
 
-		private Subject<I> subject;
-		private Coordinator<I> coordinator;
-		private List<Mutation<I>> mutations;
+		private Subject<I>			subject;
+		private Coordinator<I>		coordinator;
+		private List<Mutation<I>>	mutations;
 	}
 
-
-
-
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	// Types
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 
 	/**
 	 *
@@ -208,19 +181,17 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		 *
 		 *
 		 */
-		private BasicResult(BasicPlan plan,
-				Subject<I> subject,
+		private BasicResult(BasicPlan plan, Subject<I> subject,
 				List<Mutation<I>> completedMutations,
-				List<Mutation<I>> remainingMutations,
-				State<I> lastState,
+				List<Mutation<I>> remainingMutations, State<I> lastState,
 				MutagenException exception) {
 			super();
-			this.plan=plan;
-			this.subject=subject;
-			this.completedMutations=completedMutations;
-			this.remainingMutations=remainingMutations;
-			this.lastState=lastState;
-			this.exception=exception;
+			this.plan = plan;
+			this.subject = subject;
+			this.completedMutations = completedMutations;
+			this.remainingMutations = remainingMutations;
+			this.lastState = lastState;
+			this.exception = exception;
 		}
 
 		/**
@@ -241,7 +212,6 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 			return remainingMutations.isEmpty();
 		}
 
-
 		/**
 		 *
 		 *
@@ -250,7 +220,6 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		public State<I> getLastState() {
 			return lastState;
 		}
-
 
 		/**
 		 *
@@ -261,7 +230,6 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 			return completedMutations;
 		}
 
-
 		/**
 		 *
 		 *
@@ -270,7 +238,6 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 		public List<Mutation<I>> getRemainingMutations() {
 			return remainingMutations;
 		}
-
 
 		/**
 		 *
@@ -281,29 +248,25 @@ public class BasicPlanner<I extends Comparable<I>> implements Planner<I>  {
 			return exception;
 		}
 
-
-		private BasicPlan plan;
-		private Subject<I> subject;
-		private List<Mutation<I>> completedMutations;
-		private List<Mutation<I>> remainingMutations;
-		private State<I> lastState;
-		private MutagenException exception;
+		private BasicPlan			plan;
+		private Subject<I>			subject;
+		private List<Mutation<I>>	completedMutations;
+		private List<Mutation<I>>	remainingMutations;
+		private State<I>			lastState;
+		private MutagenException	exception;
 	}
 
-
-
-
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	// Fields
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 
-	public static final Comparator<Mutation<?>> COMPARATOR=
+	public static final Comparator<Mutation<?>>	COMPARATOR	=
 		new Comparator<Mutation<?>>() {
 			@Override
-			public int compare(Mutation m1, Mutation m2) {
-				return m1.getResultingState().compareTo(m2.getResultingState());
+			public int compare( Mutation m1, Mutation m2) {
+				return m1.getResultingState().compareTo(m2.getResultingState() );
 			}
 		};
 
-	private List<Mutation<I>> mutations;
+	private List<Mutation<I>>					mutations;
 }
